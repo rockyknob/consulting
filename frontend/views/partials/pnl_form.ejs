@@ -1,0 +1,26 @@
+<div class="section" id="pnl-analysis-form-section"> <h2>P&L Statement Analysis (Beta)</h2>
+    <p class="text-center mb-4" style="max-width: 800px; margin: -2rem auto 3rem auto;">
+        Upload your Profit & Loss or other financial statement (.xlsx, .csv, .txt, .docx format) for automated insights and a conceptual SWOT analysis.
+        <br><strong>Note:</strong> Parsing is experimental, especially for TXT/DOCX. Ensure clean data format. PDF not supported. Results are speculative and not financial advice.
+    </p>
+    <form id="pnl-form" style="max-width: 600px; margin: auto; background: var(--white); padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="margin-bottom: 1.5rem;">
+            <label for="pnl-file" style="display: block; margin-bottom: 0.8rem; font-weight: 500;">Select File (.xlsx, .csv, .txt, .docx)*</label>
+            <input type="file" id="pnl-file" name="file" required accept=".xlsx,.csv,.txt,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,text/plain">
+            <style> /* Basic file input styling */
+                #pnl-file { display: block; width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; box-sizing: border-box; }
+                #pnl-file::file-selector-button { margin-right: 1rem; padding: 8px 12px; border-radius: 4px; border: none; background-color: var(--secondary-blue); color: white; cursor: pointer; transition: background-color 0.2s ease;}
+                #pnl-file::file-selector-button:hover { background-color: var(--primary-blue); }
+            </style>
+        </div>
+        <div id="pnl-form-status" class="form-status" style="margin-bottom: 1rem;"></div>
+        <div class="stButton"> <button type="submit" id="pnl-submit-button">Analyze File</button>
+        </div>
+    </form>
+
+    <div id="pnl-results" style="max-width: 800px; margin: 2rem auto 0 auto; background: #e9ecef; padding: 1.5rem; border-radius: 8px; display: none;">
+         <h4>Analysis Results:</h4>
+         <pre id="pnl-results-output" style="white-space: pre-wrap; word-wrap: break-word; background: var(--white); padding: 1rem; border-radius: 5px; max-height: 600px; overflow-y: auto; font-size: 0.9em;"></pre>
+         <p style="margin-top: 1rem; font-size: 0.85em; color: var(--text-light); border-top: 1px solid var(--border-color); padding-top: 1rem;" id="pnl-disclaimer"></p>
+    </div>
+</div>

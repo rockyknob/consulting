@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/header', { pageTitle: pageTitle || "Dashboard" }) %>
+</head>
+<body>
+    <%- include('partials/navbar') %> <%# Assumes navbar uses res.locals.currentUser %>
+
+    <main class="section">
+        <h2>User Dashboard</h2>
+
+        <% if (currentUser) { %>
+            <p>Welcome back to your dashboard, <strong><%= currentUser.displayName %></strong>!</p>
+            <p>This is your personalized space. Future features could include:</p>
+            <ul>
+                <li>Viewing saved analysis reports.</li>
+                <li>Tracking the status of your submitted requests (Contact/Hire).</li>
+                <li>Managing profile settings.</li>
+            </ul>
+             <p><a href="/profile">View Profile</a> | <a href="/logout">Logout</a></p>
+        <% } else { %>
+             <p>You are not logged in. <a href="/">Return home</a>.</p> <%# Should not happen if route is protected %>
+        <% } %>
+
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/script.js"></script>
+</body>
+</html>

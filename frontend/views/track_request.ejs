@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Tracking - SynergyPro Consulting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Styles specific to tracking page */
+        body { background-color: var(--light-background); padding: 2rem; font-family: var(--font-family); }
+        .track-container { max-width: 800px; margin: 2rem auto; background: var(--white); padding: 2rem 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .track-header { text-align: center; color: var(--primary-blue); margin-bottom: 2rem; }
+        .request-list { list-style: none; padding: 0; }
+        .request-item { border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 1rem; background: #fdfdfd; }
+        .request-item p { margin: 0.3rem 0; font-size: 0.95em; }
+        .request-item strong { color: var(--primary-blue); }
+        .status-indicator { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+        /* Status colors defined in style.css - ensure they exist */
+        .status-received { background-color: #ffc107; } /* Amber/Yellow */
+        .status-in-progress { background-color: #007bff; } /* Blue */
+        .status-completed { background-color: #28a745; } /* Green */
+        .status-rejected { background-color: #dc3545; } /* Red */
+        .status-on-hold { background-color: #6c757d; } /* Grey */
+        .status-unknown { background-color: #e0e0e0; } /* Light Grey */
+        .back-link { display: block; text-align: center; margin-top: 2rem; color: var(--secondary-blue); }
+    </style>
+</head>
+<body>
+    <div class="track-container">
+        <h1 class="track-header">Request Tracking Results</h1>
+
+        <form id="track-form" style="max-width: 500px; margin: 0 auto 2rem auto; display: flex; gap: 10px;">
+            <input type="text" id="track-identifier" name="identifier" placeholder="Re-enter Email or Phone" required style="flex-grow: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+            <button type="submit" class="nav-cta-button" style="margin-left: 0; padding: 10px 15px;">Track Again</button>
+        </form>
+
+        <div id="tracking-results">
+            <p id="track-loading-msg" style="text-align: center;">Loading results...</p>
+            <p id="track-info-msg" style="text-align: center; display: none;"></p>
+            <ul id="request-list" class="request-list">
+                </ul>
+        </div>
+
+        <a href="/" class="back-link">← Back to Main Site</a>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

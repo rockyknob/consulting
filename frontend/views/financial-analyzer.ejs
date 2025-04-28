@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%# Pass title variable to header partial %>
+    <%- include('partials/header', { pageTitle: pageTitle || "AI Financial Analyzer" }) %>
+    <style>
+        /* Add padding only if body doesn't have it globally */
+        /* main { padding-top: var(--navbar-height); } */
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main class="section"> <%# Add section class for padding/width %>
+        <%- include('partials/pnl_form') %> <%# Include the PNL form partial %>
+        <%# Results will be populated by script.js into #pnl-results inside the partial %>
+    </main>
+
+    <%- include('partials/footer', { current_year: current_year }) %>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

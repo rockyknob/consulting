@@ -1,0 +1,54 @@
+<% if (typeof hero !== 'undefined' && hero) { %>
+    <div class="hero" id="home">
+        <div id="hero-particles"></div> 
+
+        <div class="hero-centered-content">
+            <div class="hero-text-block">
+                <h1 class="animate"><%= hero.headline || 'Headline Missing' %></h1>
+                <p class="animate" style="transition-delay: 0.1s;"><%= hero.subheadline || 'Subheadline missing.' %></p>
+                <div class="hero-actions animate" style="transition-delay: 0.2s;">
+                    <a href="<%= hero.cta_link || '#contact' %>" class="button button-primary"><%= hero.cta_button_text || 'Get Started' %></a>
+                </div>
+            </div>
+
+            <div class="hero-animation-container animate" style="transition-delay: 0.2s;">
+                 <%# --- NEW: Hidden SVG Path for Orbit --- %>
+                 <svg width="0" height="0" style="position:absolute; top: -1000px; left:-1000px;">
+                     <defs>
+                         <%# Define a circular path centered approximately %>
+                         <%# Adjust cx, cy, r (center x/y, radius) as needed %>
+                         <path id="orbit-path" d="M 250, 150
+                                     a 100, 80 0 1,0 1,0
+                                     z" fill="none" stroke="none"/>
+                                     <%# M x,y a rx,ry rotation large-arc-flag,sweep-flag dx,dy z %>
+                                     <%# Experiment with rx, ry for elliptical path %>
+                     </defs>
+                 </svg>
+                 <%# --- End SVG Path --- %>
+
+                <div class="bouncing-words">
+                    <%# Use unique IDs for easier GSAP targeting %>
+                    <span id="word-data" class="bouncing-word word-data">
+                        <span class="first-letter">D</span><span class="rest-word">ata</span>
+                    </span>
+                    <span id="word-ai" class="bouncing-word word-ai">
+                        <span class="first-letter">A</span><span class="rest-word">I</span>
+                    </span>
+                    <span id="word-valuation" class="bouncing-word word-valuation">
+                        <span class="first-letter">V</span><span class="rest-word">aluation</span>
+                    </span>
+                    <span id="word-pnl" class="bouncing-word word-pnl">
+                        <span class="first-letter">P</span><span class="rest-word">&L</span>
+                    </span>
+                </div>
+                <div class="central-text">
+                    <span>Strategy</span>&nbsp;|&nbsp;<span>Digital</span>&nbsp;|&nbsp;<span>Growth</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<% } else { %>
+    <%# Fallback error display %>
+    <div class="hero" id="home" style="min-height: 40vh; /*...*/">...</div>
+<% } %>
