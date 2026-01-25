@@ -43,7 +43,10 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from fastapi.security import OAuth2PasswordBearer
 import re
+import google.generativeai as genai
 
+# 1. Configure with your API Key
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # Secure file upload validation
 ALLOWED_EXTENSIONS = {'txt', 'csv', 'xlsx', 'docx'}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
@@ -379,8 +382,8 @@ except OSError as e:
 # --- Static Content Data Definitions ---
 # (Ideally load from file/DB)
 hero_content = {
-    "headline": "Drive business growth with your own AI",
-    "subheadline": "Partnering with industry leaders to solve their toughest challenges and capture their greatest opportunities through strategic insight and digital innovation.",
+    "headline": "Smarten your Future",
+    "subheadline": "Partnering with industry leaders to solve complex business challenges and unlock value through data-driven decision making and digital innovation.",
     "cta_button_text": "Discover Our Products",
     "cta_link": "#services",
     "background_image_placeholder": "https://source.unsplash.com/1600x900/?business,technology,abstract"
@@ -436,16 +439,16 @@ testimonials_data = [
 
 products_data = [
     {
-        "id": "prod_ai_analyzer", "name": "AI Financial Analyzer",
-        "tagline": "Unlock insights from your financial data.",
+        "id": "prod_ai_analyzer", "name": "Financial Analyzer",
+        "tagline": "Derive insights from your financial data.",
         "description": "Upload your P&L or other statements (.xlsx, .csv, .docx, .txt) for automated insights and conceptual SWOT analysis. (Beta)",
         "img_placeholder": "https://placehold.co/350x200/0056b3/FFFFFF?text=AI+Analyzer",
         "link": "/financial-analyzer"
     },
     {
-        "id": "prod_startup_consult", "name": "Startup Consultation AI",
-        "tagline": "Get AI-driven feedback for your venture.",
-        "description": "Input key metrics about your startup for AI consultation on strategy, risks, opportunities, and valuation factors. Includes placeholder reports & case studies. (Beta)",
+        "id": "prod_startup_consult", "name": "Startup Consultation",
+        "tagline": "Know Your Business.",
+        "description": "Input key metrics about your startup for intelligent consultation on strategy, risks, opportunities, and valuation factors. Includes placeholder reports & case studies. (Beta)",
         "img_placeholder": "https://placehold.co/350x200/17a2b8/FFFFFF?text=Startup+AI",
         "link": "/startup-consultation"
     },
@@ -499,7 +502,7 @@ custom_consulting_packages = [
         "documents": [
             "Detailed report containing detailed investment thesis with outputs driven from completed data points (interviews, surveys, analysis and report).",
             "Complete Databook containing all insights gathered via the CDD engagement.",
-            "Executive summary marketing financial outputs captured from the steps followed in the engagement including summary financials. (Length can vary 5-10 pages).",
+            "Executive summary marketing financial outputs captured from the steps followed in the engagement including summary financials.",
             "Excel file work outlining detailed financial and operational plan as well as having data models showing revenue and financial analysis, business valuation summary and output.",
             "Action items and pain points having a comprehensive list of areas that require improvement from the product/service offered and technology and changes for improvement."
         ],
@@ -523,7 +526,7 @@ custom_consulting_packages = [
         ],
         "documents": [
             "Investment Thesis outlining investment hypothesis and quantitative estimation of the the opportunity size covering TAM, SAM, SOM.",
-            "An Investor pitch deck containing information about company overview, market, product/service description, analysis, unique selling points, business model analysis as well as revenue generation plans (Length 20-25 pages).",
+            "An Investor pitch deck containing information about company overview, market, product/service description, analysis, unique selling points, business model analysis as well as revenue generation plans.",
             "An action plan containing each databook providing detailed financial projections, detailed revenue structure, expense projections and cash flow analysis."
         ],
          "icon": "fas fa-file-powerpoint"
@@ -531,7 +534,7 @@ custom_consulting_packages = [
     {
         "id": "gtm_strategy",
         "name": "Go To Market Strategy",
-        "description": "The goal of GO TO MARKET research is to develop a comprehensive plan that maximises the chances of success for a new product or service while minimizing the risk of failure.",
+        "description": "The goal of Go-To-Market strategy package is to develop a comprehensive plan that maximises the chances of success for a new product or service while minimizing the risk of failure.",
         "deliverables": [
             "Business Analysis",
             "Market Research and Analysis",
@@ -544,8 +547,8 @@ custom_consulting_packages = [
         ],
         "documents": [
             "Detailed GTM strategy report containing identifiable outputs driven from comprehensive business analysis, market research and analysis report.",
-            "A complete data book from the marketing and sales outlining the framework (About 30-40 pages depending on the engagement).",
-            "A complete financial model outlining the marketing and sales team budget and deep dive financial analysis as well as overall cost analysis and market prioritization report (15-20 Pages).",
+            "A complete data book from the marketing and sales outlining the framework.",
+            "A complete financial model outlining the marketing and sales team budget and deep dive financial analysis as well as overall cost analysis and market prioritization report.",
             "Action plan documents having a detailed pricing and operational launch plan, metrics as well as having data models showing critical financial metrics and KPIs.",
             "Action items and pain points having a comprehensive list of areas that require improvement from the product/service offered and technology and changes for improvement in the overall business strategy."
         ],
@@ -569,7 +572,7 @@ custom_consulting_packages = [
         "documents": [
             "An excel file containing each databook providing detailed projection of the financial structure along with sensitivity analysis. Model output includes revenue forecast, expense projections, and cash flow analysis.",
             "Financial model output including 3-statement financial model with discount, WACC assumption, Multiples, DCF, IRR and ARR as well as other financial metrics.",
-            "Detailed Financial plan containing Financial highlights and narrative. (10-15 pages)."
+            "Detailed Financial plan containing Financial highlights and narrative."
         ],
          "icon": "fas fa-calculator"
     },
@@ -628,7 +631,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 if AI_LIB_AVAILABLE and GOOGLE_API_KEY:
     try:
         genai.configure(api_key=GOOGLE_API_KEY)
-        ai_model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        ai_model = genai.GenerativeModel(model_name="gemini-3-flash-preview")
         logger.info("Gemini AI Model configured successfully.")
     except Exception as e: logger.error(f"Error configuring Gemini AI Model: {e}", exc_info=True); ai_model = None
 else: logger.warning("AI Service disabled (check API key in .env & google-generativeai install).")
@@ -646,6 +649,12 @@ if not DATABASE_URL:
     engine = None
     AsyncSessionLocal = None
 else:
+    if "?" in DATABASE_URL:
+        # If other query params exist, append with &
+        db_url_for_engine = f"{DATABASE_URL}&prepared_statement_cache_size=0"
+    else:
+        # Otherwise, start query params with ?
+        db_url_for_engine = f"{DATABASE_URL}?prepared_statement_cache_size=0"
     # Ensure the URL starts with postgresql+asyncpg:// for SQLAlchemy async engine
     if DATABASE_URL.startswith("postgresql://"):
         DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
@@ -660,7 +669,11 @@ else:
         engine = create_async_engine(
             DATABASE_URL,
             echo=False, # Set to True for SQL query logging (noisy)
-            pool_pre_ping=True
+            pool_pre_ping=True,
+            pool_recycle=300,  # Close and reopen connections every 5 mins
+    connect_args={
+        "command_timeout": 60, # Give the connection more time to breathe
+        }
         )
 
         # Create Async SessionLocal class factory
