@@ -242,25 +242,27 @@ class UserCreate(UserBase): # Schema for creating via service
     provider_id: str
     display_name: str # Required on creation
 
+
+
+class UserUpsertData(BaseModel): # Data received from frontend Passport callback
+    provider: str
+    provider_id: str
+    email: Optional[str] = None
+    display_name: str
+    profile_picture_url: Optional[str] = None
 class UserRead(UserBase): # Schema for returning user data from API
     id: int # Internal DB ID
     provider: str
+    email: Optional[str]=None
     # provider_id: str # Maybe hide this?
     display_name: str # Ensure it's required here if non-optional in DB model
     created_at: datetime.datetime
     last_login: datetime.datetime
 
     # If using SQLAlchemy models & returning them directly (needs DB setup)
-    # class Config:
+    class Config:
     #     orm_mode = True # Pydantic v1
-    #     # from_attributes = True # Pydantic v2
-
-class UserUpsertData(BaseModel): # Data received from frontend Passport callback
-    provider: str
-    provider_id: str
-    email: Optional[EmailStr] = None
-    display_name: str
-    profile_picture_url: Optional[HttpUrl] = None
+        from_attributes = True # Pydantic v2
 class UserCreateLocal(BaseModel): # For local signup endpoint
     email: EmailStr
     password: str = Field(..., min_length=8) # Require password on signup
@@ -766,13 +768,41 @@ async def get_startup_analysis(startup_data: StartupInput) -> str:
 
 # --- API Endpoints ---
 API_V1_STR = "/api/v1" # Define prefix
-@app.post(
-    f"{API_V1_STR}/users/find-or-create", # Path must match exactly
-    response_model=UserRead, # Pydantic response model
-    status_code=status.HTTP_200_OK,
-    summary="Find or Create User from OAuth",
-    tags=["Users & Auth"]
-)
+@app.post(f"{API_V1_STR}/users/find-or-create", response_model=UserRead)
+async def find_or_create_user_endpoint(data: UserUpsertData, db: AsyncSession = Depends(get_db)):
+    logger.info(f"Login attempt for provider: {data.provider}, ID: {data.provider_id}")
+    
+    try:
+        # Check if user exists
+        statement = select(User).where(User.provider_id == data.provider_id)
+        result = await db.execute(statement)
+        user = result.scalar_one_or_none()
+
+        if not user:
+            logger.info(f"Creating new account for: {data.display_name}")
+            user = User(
+                provider=data.provider,
+                provider_id=data.provider_id,
+                email=data.email.lower() if data.email else None,
+                display_name=data.display_name,
+                profile_picture_url=data.profile_picture_url
+            )
+            db.add(user)
+            await db.flush()
+        else:
+            # Update existing user info
+            user.display_name = data.display_name
+            user.profile_picture_url = data.profile_picture_url
+            user.last_login = datetime.datetime.now(datetime.timezone.utc)
+        
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    except Exception as e:
+        logger.error(f"Account creation failed: {str(e)}")
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="Internal account processing error")
 class User(Base):
     __tablename__ = "users"
 
@@ -962,7 +992,7 @@ async def startup_event():
             try:
                 logger.info("Attempting DB table creation/check...")
                 # Import Base and User model HERE inside startup to ensure they are loa
-                await conn.run_sync(Base.metadata.drop_all)
+                #await conn.run_sync(Base.metadata.drop_all)
                 await conn.run_sync(Base.metadata.create_all) # Create tables based on Base
                 logger.info("Database tables checked/created.")
             except Exception as e:
