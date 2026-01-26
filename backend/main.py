@@ -719,7 +719,7 @@ async def get_db() -> AsyncSession:
 # --- CORS Middleware ---
 default_frontend_url = "http://localhost:3000"
 frontend_url_from_env = os.getenv("FRONTEND_URL", default_frontend_url)
-origins = list(set([frontend_url_from_env, "http://localhost:3000"] + os.getenv("EXTRA_ALLOWED_ORIGINS", "").split(',')))
+origins = list(set(["https://consulting-1-u97v.onrender.com", "http://localhost:3001"] + os.getenv("EXTRA_ALLOWED_ORIGINS", "").split(',')))
 origins = [o.strip() for o in origins if o]
 logger.info(f"Configuring CORS for origins: {origins}")
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"])
