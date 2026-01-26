@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <%- include('partials/header', { pageTitle: pageTitle || "Your Profile" }) %>
+     <style>
+         .profile-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px; margin: 2rem auto;}
+         .profile-pic { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;}
+         .profile-card p { margin-bottom: 0.5rem; }
+     </style>
+</head>
+<body>
+     <%- include('partials/navbar') %>
+
+     <main class="section">
+        <h2>Your Profile</h2>
+
+        <% if (currentUser) { %>
+            <div class="profile-card">
+                 <% if (currentUser.profile_picture_url) { %>
+                     <img src="<%= currentUser.profile_picture_url %>" alt="Profile Picture" class="profile-pic">
+                 <% } else { %>
+                      <div class="profile-pic" style="background-color: #eee; display: flex; align-items: center; justify-content: center;">
+                           <i class="fas fa-user" style="font-size: 2rem; color: #aaa;"></i>
+                      </div>
+                 <% } %>
+
+                <p><strong>Name:</strong> <%= currentUser.displayName %></p>
+                <p><strong>Email:</strong> <%= currentUser.email || 'Not Provided' %></p>
+                <p><strong>Login Provider:</strong> <%= currentUser.provider %></p>
+                <p><strong>Provider ID:</strong> <%= currentUser.provider_id %></p>
+                 <%# Placeholder for editing profile %>
+                 <a href="/logout" class="button button-secondary" style="margin-top: 1.5rem;">Logout</a>
+             </div>
+        <% } else { %>
+            <p>You are not logged in. <a href="/">Return home</a>.</p>
+        <% } %>
+
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/script.js"></script>
+</body>
+</html>
