@@ -86,10 +86,10 @@ async function verifyCallback(provider, accessToken, refreshToken, profile, done
     console.log(`Passport Verify Callback for ${provider}, Profile ID: ${profile.id}`);
     const userData = {
         provider: provider,
-        provider_id: profile.id,
-        email: profile.emails?.[0]?.value || null, // Primary email if available
-        display_name: profile.displayName || profile.username || `${provider} User`,
-        profile_picture_url: profile.photos?.[0]?.value || null
+        provider_id: profile.id.toString(),
+        email: profile.emails?.[0]?.value || "", // Primary email if available
+        display_name: profile.displayName || profile.username || `${provider}_User_${profile.id.slice(-4)}`,
+        profile_picture_url: profile.photos?.[0]?.value || ""
     };
 
     try {
@@ -130,7 +130,7 @@ passport.use(new LocalStrategy.Strategy(
              const response = await fetch(backendLoginApiEndpoint, {
                  method: 'POST',
                  headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify({ email: userData.email, password: userData.password }) // Send email/password
+                 body: JSON.stringify({ email: email, password: password }) // Send email/password
              });
 
              if (!response.ok) {
@@ -400,6 +400,7 @@ app.get('/profile', ensureAuthenticated, async (req, res) => {
      console.log("Accessing protected profile for user:", res.locals.currentUser?.id);
      res.render('profile', { pageTitle: "Your Profile" }); // currentUser passed via res.locals
 });
+
 
 
 
