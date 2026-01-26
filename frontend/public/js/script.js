@@ -3,7 +3,7 @@
 // Consolidated version with all features and fixes.
 
 // --- Backend API Base URL ---
-const backendApiUrlBase = 'https://consulting-juxb.onrender.com/'; // Use v1 prefix
+const backendApiUrlBase = 'https://consulting-juxb.onrender.com/api/v1'; // Use v1 prefix
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -893,4 +893,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 }); // --- End DOMContentLoaded ---
+
 
