@@ -37,7 +37,7 @@ const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // Add SSL if required by your Postgres provider (like Vercel Postgres)
-  // ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false }
 });
 const sessionStore = new PgSession({
   pool : pool,                // Connection pool
@@ -386,9 +386,9 @@ app.get('/track-request', (req, res) => {
 });
 
 // --- Start Server ---
-app.listen(port, () => {
-    console.log(`Frontend server running at http://localhost:${port}`);
-});
+//app.listen(port, () => {
+  //  console.log(`Frontend server running at http://localhost:${port}`);
+//});
 
 // --- NEW Protected Routes ---
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
@@ -400,5 +400,6 @@ app.get('/profile', ensureAuthenticated, async (req, res) => {
      console.log("Accessing protected profile for user:", res.locals.currentUser?.id);
      res.render('profile', { pageTitle: "Your Profile" }); // currentUser passed via res.locals
 });
+
 
 
