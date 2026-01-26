@@ -14,33 +14,35 @@
         </p>
 
         <% if (typeof error !== 'undefined' && error) { %>
-            <div class="form-status form-status-error" style="text-align: center; max-width: 800px; margin: 0 auto 2rem auto;"><%= error %></div>
+            <div class="form-status form-status-error" style="text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                <%= error %>
+            </div>
         <% } %>
 
         <% if (typeof content !== 'undefined' && content.custom_consulting_packages && content.custom_consulting_packages.length > 0) { %>
             <div class="service-package-selector">
                 <% content.custom_consulting_packages.forEach((pkg, index) => { %>
-                    <div class="package-select-item <% if (index === 0) { %>active<% } %>" data-index="<%= index %>"> <%# Add active class to first item initially %>
+                    <div class="package-select-item <%= (index === 0) ? 'active' : '' %>" data-index="<%= index %>">
                         <i class="<%= pkg.icon || 'fas fa-concierge-bell' %>"></i>
                         <span><%= pkg.name %></span>
                     </div>
                 <% }); %>
             </div>
 
-            <div id="service-details-display-area"> <%# Always block, content updated by JS %>
+            <div id="service-details-display-area">
                  <h3 id="details-title">Select a service above</h3>
                  <p id="details-description"></p>
 
-                 <div id="service-details-lists-container"> <%# Container for lists %>
-                    <div> <%# Wrapper for first list %>
-                        <h4 >Key Business Activities:</h4> <%# Renamed %>
-                        <ul id="details-activities-list"> <%# Renamed ID %>
+                 <div id="service-details-lists-container">
+                    <div>
+                        <h4>Key Business Activities:</h4>
+                        <ul id="details-activities-list">
                              <li>Select a service package to view details.</li>
                          </ul>
                     </div>
-                    <div style="margin-top: 2rem;"> <%# Wrapper for second list %>
-                         <h4>Deliverables:</h4> <%# Renamed %>
-                         <ul id="details-documents-list"> <%# Renamed ID %>
+                    <div style="margin-top: 2rem;">
+                         <h4>Deliverables:</h4>
+                         <ul id="details-documents-list">
                              <li>Select a service package to view details.</li>
                          </ul>
                      </div>
@@ -49,36 +51,31 @@
 
             <div class="action-cards-container">
                  <div class="action-card">
-                     <h4><i class="fas fa-robot"></i> AI consultant</h4>
-                     <p>Ask context-specific questions about the selected service package above. Get insights on methodologies, typical timelines, or theoretical concepts.</p>
-                     <button id="ai-tool-trigger-card"><i class="fas fa-comment-dots"></i> Use custom AI Consultant</button>
+                     <h4><i class="fas fa-robot"></i> AI Consultant</h4>
+                     <p>Ask context-specific questions about the selected service package. Get insights on methodologies and typical timelines.</p>
+                     <button id="ai-tool-trigger-card"><i class="fas fa-comment-dots"></i> Use AI Assistant</button>
                  </div>
                  <div class="action-card">
                      <h4><i class="fas fa-handshake"></i> Hire Consultants</h4>
-                     <p>Need a tailored solution or want to discuss a specific project based on the selected service (or a combination)? Talk to us!</p>
+                     <p>Need a tailored solution or want to discuss a specific project? Let's connect to build your project roadmap.</p>
                      <button id="hire-trigger-card"><i class="fas fa-calendar-alt"></i> Request Custom Project</button>
                  </div>
             </div>
 
-
         <% } else if (!error) { %>
              <p class="text-center">Consulting package information is currently unavailable.</p>
         <% } %>
-
     </main>
 
-    <%- include('partials/footer', { current_year: typeof content !== 'undefined' && content ? content.current_year : null }) %>
+    <%- include('partials/footer', { current_year: content?.current_year }) %>
 
     <div id="hire-modal" class="modal-overlay">
         <div class="hire-modal-content">
-           <button class="modal-close-button" id="hire-modal-close">&times;</button>
-           <h3>Hire Consultants / Request Custom Project</h3>
-           <p>Fill in your requirements below, and we'll get back to you promptly.</p>
-
-           <form id="hire-form">
-                <h4>Contact Information</h4>
+            <button class="modal-close-button" id="hire-modal-close">&times;</button>
+            <h3>Hire Consultants</h3>
+            <form id="hire-form">
                 <div class="form-grid">
-                    <div class="form-group"> <%# Wrap input+label %>
+                    <div class="form-group">
                         <input type="text" id="hire-name" name="contact_name" required placeholder=" ">
                         <label for="hire-name">Your Name*</label>
                     </div>
@@ -86,136 +83,65 @@
                         <input type="email" id="hire-email" name="contact_email" required placeholder=" ">
                         <label for="hire-email">Your Email*</label>
                     </div>
-                    <div class="form-group">
-                        <input type="tel" id="hire-phone" name="contact_phone" placeholder=" ">
-                        <label for="hire-phone">Phone</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="hire-company" name="contact_company" placeholder=" ">
-                        <label for="hire-company">Company</label>
-                    </div>
-               </div>
+                </div>
 
-               <h4 style="margin-top: 2rem;">Project Requirements</h4>
-                <div class="form-grid">
-                   <div class="form-group">
-                        <label for="hire-industry">Industry*</label> <%# Label first for select is ok, or style differently %>
+                <div class="form-grid" style="margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label for="hire-industry">Industry*</label>
                         <select id="hire-industry" name="industry" required>
-                            <option value="" disabled selected>Select Industry...</option>
-                            <option value="Technology">Technology / SaaS</option>
-                            <option value="Finance">Financial Services / FinTech</option>
-                            <option value="Other">Other</option>
-                        </select>
-                   </div>
-                   <div class="form-group">
-                        <label for="hire-function">Business Function*</label>
-                         <select id="hire-function" name="business_function" required>
-                            <option value="" disabled selected>Select Function...</option>
-                            <option value="Strategy">Strategy & Planning</option>
-                            <option value="Finance">Finance & Accounting</option>
-                             <option value="Other">Other</option>
-                        </select>
-                   </div>
-                </div>
-
-                <div style="margin-top: 1.5rem;" class="checkbox-group">
-                   <label>Relevant Service Packages (Optional)</label>
-                    <div> <% if (typeof content !== 'undefined' && content.custom_consulting_packages) { %> <% content.custom_consulting_packages.forEach(pkg => { %> <div class="checkbox-item"> <input type="checkbox" id="service-<%= pkg.id %>" name="services_needed" value="<%= pkg.id %>"> <label for="service-<%= pkg.id %>"><%= pkg.name %></label> </div> <% }); %> <% } else { %><p>Service list unavailable.</p><% } %> </div>
-                </div>
-
-                 <div class="form-grid" style="margin-top: 1.5rem;">
-                     <div class="form-group">
-                         <label for="hire-timeline">Project Timeline*</label>
-                         <select id="hire-timeline" name="project_timeline" required>
                             <option value="" disabled selected>Select...</option>
-                            <option value="<1 Month">&lt;1 month</option>
-                            <option value="1-3 Months">1-3 months</option>
-                            </select>
-                     </div>
-                      <div class="form-group">
-                        <label for="hire-start-date">Desired Start Date</label>
-                        <input type="date" id="hire-start-date" name="start_date">
-                        <%# Note: Floating labels dont work well with type=date, keep label above %>
-                      </div>
-                      <div class="form-group">
-                          <input type="text" id="hire-location" name="location" placeholder=" ">
-                          <label for="hire-location">Project Location</label>
-                      </div>
-                      <div class="form-group">
+                            <option value="Technology">Technology</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="hire-work-type">Work Type*</label>
                         <select id="hire-work-type" name="work_type" required>
-                             <option value="" disabled selected>Select...</option>
                             <option value="Remote">Remote</option>
                             <option value="Hybrid">Hybrid</option>
-                            <option value="In-Office">In-Office</option>
                         </select>
-                      </div>
-                 </div>
+                    </div>
+                </div>
 
-                <div class="form-group">
-                    <textarea id="hire-resources" name="resources_required" rows="2" placeholder=" "></textarea>
-                    <label for="hire-resources">Resources Required</label>
-                </div>
-                 <div class="form-group">
-                    <textarea id="hire-experience" name="experience_needed" rows="2" placeholder=" "></textarea>
-                    <label for="hire-experience">Required Experience / Expertise</label>
-                </div>
-                <div class="form-group">
-                    <textarea id="hire-skills" name="skills_needed" rows="2" placeholder=" "></textarea>
-                    <label for="hire-skills">Specific Skills Needed</label>
-                </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 1.5rem;">
                     <textarea id="hire-description" name="project_description" required minlength="20" rows="4" placeholder=" "></textarea>
                     <label for="hire-description">Project Description*</label>
                 </div>
 
-               <div id="hire-form-status" class="form-status" style="margin-top: 1.5rem;"></div>
-               <div style="text-align: right; margin-top: 1rem;">
-                   <button type="submit" id="hire-submit-button">Submit Hire Request</button>
-               </div>
-           </form>
+                <div id="hire-form-status" class="form-status"></div>
+                <div style="text-align: right; margin-top: 1rem;">
+                    <button type="submit" id="hire-submit-button">Submit Request</button>
+                </div>
+            </form>
         </div>
-   </div>
+    </div>
 
-   <div id="ai-tool-modal" class="modal-overlay">
-    <div class="modal-content">
+    <div id="ai-tool-modal" class="modal-overlay">
+        <div class="modal-content">
             <button class="modal-close-button" id="ai-tool-close">&times;</button>
             <h4 id="ai-tool-title">AI Consultant</h4>
-            <span id="ai-service-subtitle" class="ai-service-subtitle">Ask questions related to the selected service</span>
-
-            <div class="ai-tool-main-area">
             <div class="chat-history-container">
                 <div class="chat-history-header">
                     <span>Conversation</span>
-                    <div> <%# Buttons on right %>
-                        <button id="ai-export-pdf-btn" class="ai-action-btn" title="Export Chat as PDF"><i class="fas fa-file-pdf"></i> Export</button>
-                        <button id="ai-new-chat-btn" class="ai-action-btn" title="Start New Chat"><i class="fas fa-plus-circle"></i> New Chat</button>
+                    <div class="btn-group">
+                        <button id="ai-export-pdf-btn" class="ai-action-btn"><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button id="ai-new-chat-btn" class="ai-action-btn"><i class="fas fa-plus-circle"></i> New</button>
                     </div>
                 </div>
-                <div class="chat-history" id="ai-chat-history">
-                    <p style="color: var(--text-light); text-align: center;">Loading history or enter query...</p>
-                </div>
-            </div>
+                <div class="chat-history" id="ai-chat-history"></div>
             </div>
 
             <form id="ai-query-form">
-                <%# Removed file input %>
                 <input type="text" id="ai-query-input" name="user_query" placeholder="Ask your question..." required>
                 <button type="submit" id="ai-query-submit">Send</button>
             </form>
             <div id="ai-tool-status" class="form-status"></div>
-            <p class="ai-disclaimer">AI responses are informational only.</p> <%# Simple class %>
+        </div>
     </div>
-</div>
 
     <script src="/js/script.js"></script>
     <script>
-        const customPackagesData = <%- JSON.stringify(typeof content !== 'undefined' && content.custom_consulting_packages ? content.custom_consulting_packages : []) %>;
-        if(typeof customPackagesData !== 'undefined' && customPackagesData.length > 0) { console.log(`Custom Packages Data available: ${customPackagesData.length} items.`); }
-        else { console.warn("Custom Packages Data empty/undefined on page load."); }
+        const customPackagesData = <%- JSON.stringify(content?.custom_consulting_packages || []) %>;
     </script>
-
 </body>
 </html>
-
-
