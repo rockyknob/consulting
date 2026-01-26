@@ -130,7 +130,7 @@ passport.use(new LocalStrategy.Strategy(
              const response = await fetch(backendLoginApiEndpoint, {
                  method: 'POST',
                  headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify({ email: email, password: password }) // Send email/password
+                 body: JSON.stringify({ email: userData.email, password: userData.password }) // Send email/password
              });
 
              if (!response.ok) {
@@ -400,6 +400,7 @@ app.get('/profile', ensureAuthenticated, async (req, res) => {
      console.log("Accessing protected profile for user:", res.locals.currentUser?.id);
      res.render('profile', { pageTitle: "Your Profile" }); // currentUser passed via res.locals
 });
+
 
 
 
