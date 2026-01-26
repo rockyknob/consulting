@@ -27,9 +27,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3001;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-});
+//app.listen(PORT, '0.0.0.0', () => {
+  //  console.log(`Server running on port ${PORT}`);
+//});
 
 // --- Database & Session Store Setup ---
 const PgSession = connectPgSimple(session);
@@ -386,9 +386,9 @@ app.get('/track-request', (req, res) => {
 });
 
 // --- Start Server ---
-//app.listen(port, () => {
-  //  console.log(`Frontend server running at http://localhost:${port}`);
-//});
+app.listen(port, () => {
+  console.log(`Frontend server running at http://localhost:${port}`);
+});
 
 // --- NEW Protected Routes ---
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
@@ -400,6 +400,7 @@ app.get('/profile', ensureAuthenticated, async (req, res) => {
      console.log("Accessing protected profile for user:", res.locals.currentUser?.id);
      res.render('profile', { pageTitle: "Your Profile" }); // currentUser passed via res.locals
 });
+
 
 
 
