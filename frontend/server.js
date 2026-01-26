@@ -72,7 +72,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // Link Passport to the session
 app.use(flash());
 // --- Backend API URL ---
-const backendApiUrl = process.env.BACKEND_API_URL || 'http://127.0.0.1:8000';
+const backendApiUrl = process.env.BACKEND_API_URL || 'https://consulting-juxb.onrender.com';
 const backendUserApiEndpoint = `${backendApiUrl}/api/v1/users/find-or-create`;
 const backendUserIdApiEndpoint = `${backendApiUrl}/api/v1/users`;
 const backendLoginApiEndpoint = `${backendApiUrl}/api/v1/auth/login`; // NEW
@@ -400,6 +400,7 @@ app.get('/profile', ensureAuthenticated, async (req, res) => {
      console.log("Accessing protected profile for user:", res.locals.currentUser?.id);
      res.render('profile', { pageTitle: "Your Profile" }); // currentUser passed via res.locals
 });
+
 
 
 
