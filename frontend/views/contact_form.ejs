@@ -1,0 +1,55 @@
+<div class="section contact-section-wrapper" id="contact"> <%# Renamed outer wrapper class %>
+    <div class="contact-container"> <%# Inner container for layout and styling %>
+
+        <div class="contact-info-side">
+            <img src="/images/synergypro-logo-white.png" alt="SynergyPro Logo" class="contact-logo"> <%# Placeholder - Add your white logo %>
+            <h2>Get in Touch</h2>
+            <p>We're here to help you achieve your business goals. Fill out the form or reach out via our contact details.</p>
+            <div class="contact-details">
+                <p><i class="fas fa-envelope"></i> <a href="mailto:info@synergypro.example.com">info@synergypro.example.com</a></p> <%# Replace with real email %>
+                <p><i class="fas fa-phone"></i> <a href="tel:+91xxxxxxxxxx">+91 XXXX XXXX</a></p> <%# Replace with real phone %>
+            </div>
+            <div class="contact-socials">
+                 <a href="#" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                 <a href="#" target="_blank" rel="noopener noreferrer" title="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+            </div>
+        </div>
+
+        <div class="contact-form-side">
+            <h3>Send Us a Message</h3>
+            <form id="contact-form">
+                 <div class="form-group">
+                    <input type="text" id="name" name="name" required placeholder=" "> <%# Placeholder must exist but can be space for :not(:placeholder-shown) %>
+                    <label for="name">Full Name*</label>
+                 </div>
+                 <div class="form-group">
+                     <input type="email" id="email" name="email" required placeholder=" ">
+                     <label for="email">Work Email*</label>
+                 </div>
+                  <div class="form-group">
+                     <input type="text" id="company" name="company" placeholder=" ">
+                     <label for="company">Company</label>
+                 </div>
+                 <div class="form-group">
+                     <input type="tel" id="phone" name="phone" placeholder=" ">
+                     <label for="phone">Phone</label>
+                 </div>
+                 <div class="form-group full-width">
+                     <input type="text" id="subject" name="subject" required placeholder=" ">
+                     <label for="subject">Subject*</label>
+                 </div>
+                 <div class="form-group full-width">
+                     <textarea id="message" name="message" required rows="4" placeholder=" "></textarea>
+                     <label for="message">Your Message*</label>
+                 </div>
+
+                <div id="form-status" class="form-status full-width"></div>
+
+                <div class="form-group full-width button-wrapper">
+                    <button type="submit" class="button button-primary">Send Inquiry</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

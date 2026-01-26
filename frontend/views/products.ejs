@@ -1,0 +1,56 @@
+<div class="section section-shaded" id="products">
+    <h2>Our Products</h2>
+    <p class="text-center" style="max-width: 700px; margin: -2rem auto 4rem auto;">Leverage our innovative tools and tailored solutions to gain critical business insights and make strategic decisions.</p>
+
+    <% if (typeof products !== 'undefined' && products.length > 0) { %>
+        <% products.forEach((product, index) => { %>
+            <div class="feature-section <% if (index % 2 !== 0) { %>reverse<% } %>">
+
+                <div class="feature-text animate">
+                    <h3><%= product.name %></h3>
+                     <% if (product.tagline) { %>
+                       <p style="font-size: 1.1em; font-weight: 500; color: var(--text-medium); margin-bottom: 1rem;"><%= product.tagline %></p>
+                     <% } %>
+                    <p><%= product.description %></p>
+                     <%
+                       let targetUrl = product.link || '#products';
+                       let newTab = false;
+                       if (product.id === 'prod_ai_analyzer') { targetUrl = '/financial-analyzer'; newTab = true; }
+                       else if (product.id === 'prod_startup_consult') { targetUrl = '/startup-consultation'; newTab = true; }
+                       else if (product.id === 'prod_custom_solution') { targetUrl = '/custom-consulting'; newTab = true; }
+                     %>
+                     <div style="margin-top: 1.5rem;">
+                         <a href="<%= targetUrl %>"
+                            class="button button-secondary"
+                            <%- (newTab ? 'target="_blank" rel="noopener noreferrer"' : '') %>>
+                            Learn More
+                         </a>
+                    </div>
+                </div>
+
+                <div class="feature-image animate">
+                    
+                    <% let imageSrc = product.img_placeholder || '/images/placeholder.png'; // Default fallback %>
+                    <% if (product.id === 'prod_ai_analyzer') { %>
+                        <% imageSrc = '/images/product-financial-analyzer-ui.png'; %> <%# Use your screenshot %>
+                    <% } else if (product.id === 'prod_startup_consult') { %>
+                        <% imageSrc = '/images/product-startup-consult-ui.png'; %> <%# Use your screenshot %>
+                    <% } else if (product.id === 'prod_custom_solution') { %>
+                         <% imageSrc = '/images/product-custom-consulting-ui.png'; %> <%# Use your screenshot %>
+                    <% } %>
+
+                    <img src="<%= imageSrc %>" alt="UI snapshot for <%= product.name %>" style="border-radius: 8px; max-width: 100%; border: 1px solid var(--border-color-light); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    
+                </div>
+
+            </div> 
+
+            <% if (index < products.length - 1) { %>
+                <hr style="border: none; border-top: 1px solid var(--border-color-light); margin: 4rem auto; max-width: 300px;">
+            <% } %>
+
+        <% }); %>
+    <% } else { %>
+        <p class="text-center">Product information currently unavailable.</p>
+    <% } %>
+</div>
