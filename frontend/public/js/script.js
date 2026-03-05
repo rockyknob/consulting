@@ -365,34 +365,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Open AI modal ────────────────────────
     async function openAiToolModal() {
-        if (!currentSelectedServiceContext?.id) {
-            alert('Please select a service package first.');
-            return;
-        }
+    console.log("Opening AI Modal...");
 
-        const modalTitle     = document.getElementById('ai-tool-title');
-        const serviceSubtitle = document.getElementById('ai-service-subtitle');
-        const queryInput     = document.getElementById('ai-query-input');
-        const statusDiv      = document.getElementById('ai-tool-status');
+    const overlay = document.getElementById('ai-tool-modal');
+    const chatHistory = document.getElementById('ai-chat-history');
+    const queryInput = document.getElementById('ai-query-input');
+    
+    // Check for the existence of elements BEFORE doing anything else
+    if (!overlay || !chatHistory || !queryInput) {
+        console.error("Critical UI elements missing for AI Modal.");
+        return;
+    }
 
-        if (!aiToolModalOverlay || !modalTitle || !serviceSubtitle || !queryInput) {
-            alert('Error opening AI Assistant: page elements missing.');
-            return;
-        }
+    // Use window.customPackagesData instead of the local variable
+    const currentPackages = window.customPackagesData || [];
+    if (!currentSelectedServiceContext && currentPackages.length > 0) {
+        // Default to the first package if none selected
+        currentSelectedServiceContext = { 
+            id: currentPackages[0].id || 0, 
+            name: currentPackages[0].name 
+        };
+    }
 
-        const { conversationId, history } = ChatStorage.load(currentSelectedServiceContext.id);
-        currentAiConversationId = conversationId;
-        currentAiChatHistory    = history;
+    if (!currentSelectedServiceContext) {
+        alert("Please select a service package first.");
+        return;
+    }
 
-        modalTitle.textContent    = `AI Assistant: ${currentSelectedServiceContext.name}`;
-        serviceSubtitle.textContent = `Conversation about ${currentSelectedServiceContext.name}`;
+    const { conversationId, history } = ChatStorage.load(currentSelectedServiceContext.id);
+    currentAiConversationId = conversationId;
+    currentAiChatHistory = history;
 
-        renderChatHistory(currentAiChatHistory);
-        fetchAndDisplaySuggestions(currentSelectedServiceContext.name);
+    // Update Title if it exists
+    const titleEl = document.getElementById('ai-tool-title');
+    if (titleEl) titleEl.textContent = `AI Assistant: ${currentSelectedServiceContext.name}`;
 
-        if (statusDiv) setFormStatus(statusDiv, '', 'sending');
-        queryInput.value = '';
-        openModal(aiToolModalOverlay);
+    renderChatHistory(currentAiChatHistory);
+    openModal(overlay);
     }
 
     function closeAiToolModal() {
@@ -848,5 +857,6 @@ function initializeHeroAnimation() {
         tl.to({}, { duration: 0.5 });
     });
 }
+
 
 
