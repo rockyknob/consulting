@@ -141,8 +141,13 @@
 
     <script src="/js/script.js"></script>
     <script>
-        const customPackagesData = <%- JSON.stringify(content?.custom_consulting_packages || []) %>;
+        // This attaches your EJS data to the global window object
+        window.customPackagesData = <%- JSON.stringify(content?.custom_consulting_packages || []) %>;
+        
+        // This tells the script to re-run its initialization in case it missed the elements
+        document.dispatchEvent(new Event('DOMContentLoaded'));
     </script>
 </body>
 </html>
+
 
