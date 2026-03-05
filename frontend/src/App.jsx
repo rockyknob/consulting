@@ -4,7 +4,7 @@ export default function App() {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/content')
+    fetch('https://consulting-juxb.onrender.com/api/v1/content')
       .then(res => res.json())
       .then(fetchedData => {
         setData(fetchedData);
