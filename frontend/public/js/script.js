@@ -49,6 +49,7 @@ function downloadMarkdown(content, filename = 'report.md') {
 async function apiFetch(url, options = {}) {
     const response = await fetch(url, {
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // <--- ADD THIS LINE
         ...options,
     });
     const result = await response.json();
@@ -847,4 +848,5 @@ function initializeHeroAnimation() {
         tl.to({}, { duration: 0.5 });
     });
 }
+
 
