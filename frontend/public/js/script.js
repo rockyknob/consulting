@@ -777,6 +777,28 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (hireModal?.classList.contains('visible')) closeModal(hireModal, hireForm, hireFormStatus);
         else if (csModal?.classList.contains('visible'))   closeCaseStudyModal?.();
     });
+    // Listen for clicks on the entire document (Event Delegation)
+    document.addEventListener('click', (e) => {
+        // 1. Handle Package Selection
+        const packageItem = e.target.closest('.package-select-item');
+        if (packageItem) {
+            const index = parseInt(packageItem.dataset.index, 10);
+            document.querySelectorAll('.package-select-item').forEach(i => i.classList.remove('active'));
+            packageItem.classList.add('active');
+            updateServiceDetails(index);
+        }
+    
+        // 2. Handle AI Tool Trigger
+        if (e.target.closest('#ai-tool-trigger-card')) {
+            console.log("AI Tool Triggered via Event Delegation");
+            openAiToolModal();
+        }
+    
+        // 3. Handle Hire Trigger
+        if (e.target.closest('#hire-trigger-card')) {
+            openModal(document.getElementById('hire-modal'));
+        }
+    });
 
 }); // ── End DOMContentLoaded ──
 
@@ -825,3 +847,4 @@ function initializeHeroAnimation() {
         tl.to({}, { duration: 0.5 });
     });
 }
+
