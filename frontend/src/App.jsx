@@ -8,26 +8,41 @@ export default function App() {
       .then(res => res.json())
       .then(fetchedData => {
         setData(fetchedData);
-        // This is the bridge: script.js can now see the services data
         window.customPackagesData = fetchedData.services; 
       })
       .catch(err => console.error("Error loading content:", err))
   }, [])
 
-  if (!data) return <div className="p-4">Loading...</div>
-
   return (
     <div className="p-4 space-y-6">
-      {/* Existing Hero Section */}
-      <section className="text-center bg-blue-50 p-6 rounded-xl shadow">
-        <h1 className="text-3xl font-bold">{data.hero.headline}</h1>
-        <p className="text-lg text-gray-700 mt-2">{data.hero.subheadline}</p>
-        <a href={data.hero.cta_link} className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-full">
-          {data.hero.cta_button_text}
-        </a>
-      </section>
+      {/* 1. Only hide the content parts while loading, NOT the whole page */}
+      {!data ? (
+        <div className="p-4">Loading...</div>
+      ) : (
+        <>
+          <section className="text-center bg-blue-50 p-6 rounded-xl shadow">
+            <h1 className="text-3xl font-bold">{data.hero.headline}</h1>
+            <p className="text-lg text-gray-700 mt-2">{data.hero.subheadline}</p>
+            <a href={data.hero.cta_link} className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-full">
+              {data.hero.cta_button_text}
+            </a>
+          </section>
 
-      {/* --- ADDED FOR SCRIPT.JS: Service Details Area --- */}
+          <section id="services">
+            <h2 className="text-2xl font-semibold mb-4">Our Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {data.services.map((srv, idx) => (
+                <div key={idx} className="package-select-item bg-white p-4 rounded-lg shadow-md cursor-pointer" data-index={idx}>
+                  <h3 className="font-bold text-lg">{srv.title}</h3>
+                  <p>{srv.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* 2. ALWAYS keep these OUTSIDE the loading check so script.js finds them immediately */}
       <div id="service-details-display-area" style={{ display: 'none' }}>
         <h2 id="details-title"></h2>
         <p id="details-description"></p>
@@ -38,20 +53,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Existing Services Section */}
-      <section id="services">
-        <h2 className="text-2xl font-semibold mb-4">Our Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {data.services.map((srv, idx) => (
-            <div key={idx} className="package-select-item bg-white p-4 rounded-lg shadow-md cursor-pointer" data-index={idx}>
-              <h3 className="font-bold text-lg">{srv.title}</h3>
-              <p>{srv.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- ADDED FOR SCRIPT.JS: AI Modal --- */}
       <div id="ai-tool-modal" className="modal-overlay" style={{ display: 'none' }}>
         <div className="modal-content bg-white p-6 rounded shadow-lg">
           <span id="ai-tool-close" className="cursor-pointer text-xl">&times;</span>
